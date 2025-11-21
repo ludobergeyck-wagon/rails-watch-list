@@ -12,7 +12,7 @@
       </li>
     <% end %>
   </ul>
-  <p><%= link_to "Home", lists_path %></p>
+  <p><%= link_to "Home", root_path %></p>
   <p><%= link_to "Create Bookmark", new_list_bookmark_path(@list) %></p>
   <p>
     <%= button_to "Supprimer", list_path(@list), method: :delete, data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr ?" } %>
@@ -31,7 +31,7 @@
     </div>
 
     <div class="col-md-4 d-flex justify-content-end align-items-center gap-2">
-      <%= link_to lists_path, class: "btn btn-outline-secondary" do %>
+      <%= link_to root_path, class: "btn btn-outline-secondary" do %>
         <i class="fas fa-home"></i>
         Home
       <% end %>
