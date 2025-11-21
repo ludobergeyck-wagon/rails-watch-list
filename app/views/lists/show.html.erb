@@ -1,0 +1,158 @@
+<% if false %>
+  <h2><%= @list.name %></h2>
+  <h3>Movies in this list:</h3>
+  <ul>
+    <% @list.movies.each do |movie| %>
+      <li>
+        <strong><%= movie.title %></strong>
+        <br>
+        <%= movie.overview %>
+        <br>
+        <%= image_tag movie.poster_url, alt: movie.title,  width: 100 %>
+      </li>
+    <% end %>
+  </ul>
+  <p><%= link_to "Home", lists_path %></p>
+  <p><%= link_to "Create Bookmark", new_list_bookmark_path(@list) %></p>
+  <p>
+    <%= button_to "Supprimer", list_path(@list), method: :delete, data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr ?" } %>
+  </p>
+<% end %>
+
+<div class="container my-5">
+  <!-- Header avec titre et actions -->
+  <div class="row mb-4">
+    <div class="col-md-8">
+      <h1 class="display-4 mb-3"><%= @list.name %></h1>
+
+      <p class="text-muted">
+        <%= @list.bookmarks.count %> film(s) dans cette liste
+      </p>
+    </div>
+
+    <div class="col-md-4 d-flex justify-content-end align-items-center gap-2">
+      <%= link_to lists_path, class: "btn btn-outline-secondary" do %>
+        <i class="fas fa-home"></i>
+        Home
+      <% end %>
+
+      <%= link_to new_list_bookmark_path(@list), class: "btn btn-success" do %>
+        <i class="fas fa-plus"></i>
+        Add Movie
+      <% end %>
+
+      <%= button_to list_path(@list), 
+        method: :delete, 
+        data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr de vouloir supprimer cette liste ?" },
+        class: "btn btn-danger" do %>
+        <i class="fas fa-trash"></i>
+        Delete
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Liste des films -->
+  <div class="row">
+    <% if @list.bookmarks.any? %>
+      <% @list.bookmarks.each do |bookmark| %>
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card h-100 shadow-sm">
+            <%= image_tag bookmark.movie.poster_url, 
+              alt: bookmark.movie.title, 
+              class: "card-img-top",
+              style: "height: 400px; object-fit: cover;" %>
+
+            <div class="card-body">
+              <h5 class="card-title"><%= bookmark.movie.title %></h5>
+
+              <p class="card-text text-muted mb-3">
+                <%= truncate(bookmark.movie.overview, length: 120) %>
+              </p>
+
+              <%# Commentaire intégré %>
+              <% if bookmark.comment.present? %>
+                <div class="comment-box">
+                  <div class="d-flex align-items-center mb-2">
+                    <i class="fas fa-quote-left text-primary me-2"></i>
+                    <small class="text-muted fw-bold">Mon avis</small>
+                  </div>
+
+                  <p class="comment-text mb-0"><%= bookmark.comment %></p>
+                </div>
+              <% end %>
+            </div>
+
+            <div
+              class="
+                card-footer bg-transparent d-flex justify-content-between
+                align-items-center
+              "
+            >
+              <small class="text-muted">
+                <i class="fas fa-star text-warning"></i>
+                <%= bookmark.movie.rating || "N/A" %>
+              </small>
+
+              <%= link_to bookmark_path(bookmark), 
+                data: { turbo_method: :delete, turbo_confirm: "Retirer ce film ?" },
+                class: "btn btn-sm btn-outline-danger" do %>
+                <i class="fas fa-times"></i>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="col-12">
+        <div class="alert alert-info text-center" role="alert">
+          <h4 class="alert-heading">Aucun film pour le moment</h4>
+
+          <p>Commencez par ajouter des films à votre liste !</p>
+          <%= link_to "Ajouter un film", new_list_bookmark_path(@list), class: "btn btn-primary mt-2" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- CSS personnalisé -->
+<style>
+  .card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2) !important;
+  }
+
+  .card-title {
+    font-weight: 600;
+    color: #2c3e50;
+  }
+
+  .display-4 {
+    color: #2c3e50;
+    font-weight: 700;
+  }
+
+  /* Style pour le commentaire */
+  .comment-box {
+    background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+    border-left: 3px solid #667eea;
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+  }
+
+  .comment-text {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #495057;
+    font-style: italic;
+  }
+
+  .fa-quote-left {
+    font-size: 1.1rem;
+  }
+</style>

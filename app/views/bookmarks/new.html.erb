@@ -1,0 +1,21 @@
+<%= simple_form_for [@list, @bookmark] do |f| %>
+  <%= f.input :comment, label: "bookmark comments" %>
+
+  <%= f.association :movie, 
+                  collection: Movie.all.order(:title), 
+                  label_method: :title,
+                  input_html: { class: "select2" },
+                  prompt: "Sélectionner un film" %>
+
+  <div class="d-grid gap-2 d-md-flex justify-content-md-start mt-4">
+    <%= f.button :submit, class: "btn btn-primary" do %>
+      <i class="bi bi-check2-square me-2"></i>
+      Create
+    <% end %>
+
+    <%= link_to lists_path, class: "btn btn-outline-secondary" do %>
+      <i class="bi bi-house me-2"></i>
+      Home
+    <% end %>
+  </div>
+<% end %>
